@@ -1633,7 +1633,7 @@ op_db: List[OpInfo] = [
                        SkipInfo('TestCommon', 'test_variant_consistency_eager',
                                 dtypes=[torch.cfloat, torch.cdouble]),
                        SkipInfo('TestCommon', 'test_variant_consistency_jit',
-                                dtypes=[torch.cfloat, torch.cdouble, torch.bfloat16]),
+                                dtypes=[torch.bfloat16]),
                        SkipInfo('TestCommon', 'test_jit_alias_remapping',
                                 dtypes=[torch.cfloat, torch.cdouble, torch.bfloat16]),
                    ),

@@ -598,8 +598,10 @@ class ShapePropagator {
       case aten::Bool:
       case aten::Int:
       case aten::Float:
+      case aten::Complex:
       case aten::ScalarImplicit:
       case aten::FloatImplicit:
+      case aten::ComplexImplicit:
       case aten::IntImplicit:
         return; // correct num type is already set
       case prim::NumToTensor: {
@@ -611,6 +613,9 @@ class ShapePropagator {
         } else if (node->input()->type()->isSubtypeOf(FloatType::get())) {
           node->output()->setType(TensorType::create(
               at::kDouble, at::kCPU, 0, /*requires_grad=*/c10::nullopt));
+        } else if (node->input()->type()->isSubtypeOf(ComplexType::get())) {
+          node->output()->setType(TensorType::create(
+              at::kComplexDouble, at::kCPU, 0, /*requires_grad=*/c10::nullopt));
         }
         return;
       }
