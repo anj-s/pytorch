@@ -254,6 +254,8 @@ enum class DispatchKey : uint8_t {
   // for a usage example
   TESTING_ONLY_GenericMode,
 
+  AlwaysCall,
+
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FIN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
   NumDispatchKeys, // Sentinel, end of runtime keys.
 
