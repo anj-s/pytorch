@@ -4004,9 +4004,8 @@ class TestAutograd(TestCase):
         # runtime error while compute batched grad (print big error)
         with self.assertRaisesRegex(RuntimeError, 'gradcheck or gradgradcheck failed while testing batched gradient'):
             gradcheck(lambda x: x.to_dense(), (x,), check_sparse_nnz=True, check_batched_grad=True)
-        # TODO: fix and then uncomment
-        # self.assertFalse(gradcheck(lambda x: x.to_dense(), (x,), check_sparse_nnz=True, check_batched_grad=True,
-        #                            raise_exception=False))
+        self.assertFalse(gradcheck(lambda x: x.to_dense(), (x,), check_sparse_nnz=True, check_batched_grad=True,
+                                   raise_exception=False))
 
     def test_gradcheck_backward_mul_by_grad_output(self):
         # when grad_input is sparse and has incorrect sparse_dim/dense_dim
@@ -4079,6 +4078,16 @@ class TestAutograd(TestCase):
     def test_gradcheck_check_analytical_jacobian_attributes(self):
         # TODO: when grad_input is incorrect dtype/size
         pass
+
+    def test_gradcheck_jacobian_mismatch(self):
+        def fn(x):
+            y = x.clone()
+            y.register_hook(lambda x: x + 1e-2)
+            return y
+        x = torch.ones(2, 2, requires_grad=True)
+        with self.assertRaisesRegex(RuntimeError, 'Jacobian mismatch for output 0 with respect to input 0'):
+            gradcheck(fn, (x,))
+        self.assertFalse(gradcheck(fn, (x,), raise_exception=False))
 
     def test_version_counter(self):
         x = torch.randn(1, 2)
